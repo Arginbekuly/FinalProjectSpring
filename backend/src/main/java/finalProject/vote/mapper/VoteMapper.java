@@ -14,13 +14,13 @@ public interface VoteMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target= "createdAt",  ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
-
-
     Vote toEntity(VoteCreateRequestDto dto);
-    VoteResponseDto  toDto(Vote entity);
 
     @Mapping(target = "userId", source = "user.id")
     @Mapping(target = "theoryId",source = "theory.id")
+    VoteResponseDto  toDto(Vote entity);
+
+
     List<VoteResponseDto> toDto(List<Vote> entities);
 
 }

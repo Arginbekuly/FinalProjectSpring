@@ -44,10 +44,10 @@ public class Theory {
     @Column(name = "credibility_score", nullable = false)
     private Float credibilityScore;
 
-    @Column(name = "popularityScore", nullable = false)
+    @Column(name = "popularity_score", nullable = false)
     private Float popularityScore;
 
-    @Column(name = "contradictionCount", nullable = false)
+    @Column(name = "contradiction_count", nullable = false)
     private Integer contradictionCount;
 
     @Column(name = "view_count", nullable = false)
@@ -62,6 +62,19 @@ public class Theory {
     @Column(name = "published_at", nullable = false)
     private LocalDateTime publishedAt;
 
+    @PrePersist
+    public void prePersist()
+    {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+        publishedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    public void preUpdate()
+    {
+        updatedAt = LocalDateTime.now();
+    }
 
 }
 

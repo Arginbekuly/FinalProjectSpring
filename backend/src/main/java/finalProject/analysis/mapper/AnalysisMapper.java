@@ -16,9 +16,10 @@ public interface AnalysisMapper {
     @Mapping(target = "analyzedAt", ignore = true)
     AnalysisResult toEntity(AnalysisCreateRequestDto dto);
 
+    @Mapping(target = "theoryId", source = "theory.id")
     AnalysisResultResponseDto  toDto(AnalysisResult entity);
 
-    @Mapping(target = "theoryId", source = "theory.id")
+
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     List<AnalysisResultResponseDto> toDto(List<AnalysisResult> entities);
