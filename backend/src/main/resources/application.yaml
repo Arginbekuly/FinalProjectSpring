@@ -15,5 +15,5 @@ spring:
     enabled: true
 
   jwt:
-    secret: ${JWT_SECRET} # min 256-bit random string
-    expiration-ms: 3600000 # 1 hour in milliseconds
+    secret: ${JWT_SECRET_KEY}
+    expiration-ms: 86400000
