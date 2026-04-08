@@ -14,7 +14,6 @@ public interface UserMapper {
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "role", ignore = true)
     @Mapping(target = "status", ignore = true)
-    @Mapping(target = "passwordHash", source = "password")
     @Mapping(target = "theories", ignore = true)
 
     User toUser(UserCreateRequestDto userDto);

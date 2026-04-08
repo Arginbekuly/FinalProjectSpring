@@ -1,33 +1,35 @@
 package finalProject.theory.mapper;
 
 import finalProject.theory.dto.request.TheoryUpdateRequestDto;
-import org.mapstruct.*;
 import finalProject.theory.dto.request.TheoryCreateRequestDto;
 import finalProject.theory.dto.response.TheoryResponseDto;
 import finalProject.theory.entity.Theory;
+import finalProject.theory.entity.TheoryStatus;
+import org.mapstruct.*;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface TheoryMapper {
-    //Create
+
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "user", ignore = true)
-    @Mapping(target = "status", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "publishedAt", ignore = true)
     @Mapping(target = "evidence", ignore = true)
+    @Mapping(target = "status", expression = "java(TheoryStatus.PENDING)")
+    @Mapping(target = "credibilityScore", constant = "0")
+    @Mapping(target = "popularityScore", constant = "0")
+    @Mapping(target = "contradictionCount", constant = "0")
+    @Mapping(target = "viewCount", constant = "0")
     Theory toEntity(TheoryCreateRequestDto dto);
 
-    //Response
     @Mapping(target = "userId", source = "user.id")
     TheoryResponseDto toDto(Theory theory);
 
-    //List
     List<TheoryResponseDto> toDto(List<Theory> theories);
 
-    //Update
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "user", ignore = true)
