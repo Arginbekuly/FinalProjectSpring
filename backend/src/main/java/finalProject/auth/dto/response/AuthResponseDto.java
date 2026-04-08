@@ -1,4 +1,14 @@
 package finalProject.auth.dto.response;
 
-public record AuthResponseDto() {
+import java.util.UUID;
+
+public record AuthResponseDto(
+
+        UUID userId,
+        String username,
+        String email,
+        String token,
+        String tokenType
+
+) {
 }

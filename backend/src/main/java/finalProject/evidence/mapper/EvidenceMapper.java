@@ -12,7 +12,6 @@ import java.util.List;
 public interface EvidenceMapper {
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "type", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "theory", ignore = true)

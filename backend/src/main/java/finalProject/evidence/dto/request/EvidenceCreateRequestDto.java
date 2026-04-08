@@ -1,5 +1,6 @@
 package finalProject.evidence.dto.request;
 
+import finalProject.evidence.entity.EvidenceType;
 import jakarta.validation.constraints.*;
 
 import java.util.UUID;
@@ -25,6 +26,9 @@ public record EvidenceCreateRequestDto(
         @Min(value = 0, message = "Reliability score must be at least 0")
         @Max(value = 100, message = "Reliability score must be at most 100")
         Integer reliabilityScore,
+
+        @NotNull(message = "Evidence type is required")
+        EvidenceType type,
 
         @NotNull(message = "Theory ID is required")
         UUID theoryId

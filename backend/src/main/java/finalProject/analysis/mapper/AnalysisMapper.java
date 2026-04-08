@@ -14,6 +14,7 @@ import java.util.List;
 public interface AnalysisMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "analyzedAt", ignore = true)
+    @Mapping(target = "theory", ignore = true)
     AnalysisResult toEntity(AnalysisCreateRequestDto dto);
 
     @Mapping(target = "theoryId", source = "theory.id")

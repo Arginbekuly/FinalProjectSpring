@@ -1,3 +1,19 @@
 spring:
   application:
     name: Theory-Conspiracy-Validator
+
+  datasource:
+    url: jdbc:postgresql://postgres:5432/theory
+    username: theories
+    password: secret
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+  flyway:
+    enabled: true
+
+  jwt:
+    secret: ${JWT_SECRET} # min 256-bit random string
+    expiration-ms: 3600000 # 1 hour in milliseconds

@@ -14,6 +14,8 @@ public interface VoteMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target= "createdAt",  ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "theory", ignore = true)
     Vote toEntity(VoteCreateRequestDto dto);
 
     @Mapping(target = "userId", source = "user.id")

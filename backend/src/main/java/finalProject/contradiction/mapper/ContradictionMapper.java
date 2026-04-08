@@ -12,6 +12,7 @@ import java.util.List;
 public interface ContradictionMapper {
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "severity", source = "severity")
     @Mapping(target = "status", ignore = true)
     @Mapping(target = "theoryA", ignore = true)
     @Mapping(target = "theoryB", ignore = true)
@@ -20,11 +21,10 @@ public interface ContradictionMapper {
     @Mapping(target = "updatedAt", ignore = true)
     Contradiction toEntity(ContradictionCreateRequestDto dto);
 
-    @Mapping(target = "theoryAId", source = "theoryA.id")
-    @Mapping(target = "theoryATitle", source = "theoryA.title")
-    @Mapping(target = "theoryBId", source = "theoryB.id")
-    @Mapping(target = "theoryBTitle", source = "theoryB.title")
-    @Mapping(target = "userId", source = "user.id")
+    @Mapping(target = "theoryId", source = "theoryA.id")
+    @Mapping(target = "theoryTitle", source = "theoryA.title")
+    @Mapping(target = "contradictingTheoryId", source = "theoryB.id")
+    @Mapping(target = "contradictingTheoryTitle", source = "theoryB.title")
     ContradictionResponseDto toDto(Contradiction entity);
 
     List<ContradictionResponseDto> toDtoList(List<Contradiction> entities);
