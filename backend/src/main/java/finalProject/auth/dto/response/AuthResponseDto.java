@@ -1,14 +1,11 @@
 package finalProject.auth.dto.response;
 
-import java.util.UUID;
+import finalProject.user.entity.UserRole;
 
 public record AuthResponseDto(
 
-        UUID userId,
-        String username,
-        String email,
         String token,
-        String tokenType
+        UserRole role
 
 ) {
 }

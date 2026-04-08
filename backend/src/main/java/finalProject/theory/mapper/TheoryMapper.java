@@ -18,7 +18,7 @@ public interface TheoryMapper {
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "publishedAt", ignore = true)
     @Mapping(target = "evidence", ignore = true)
-    @Mapping(target = "status", expression = "java(TheoryStatus.PENDING)")
+    @Mapping(target = "status", expression = "java(TheoryStatus.PENDING_REVIEW)")
     @Mapping(target = "credibilityScore", constant = "0")
     @Mapping(target = "popularityScore", constant = "0")
     @Mapping(target = "contradictionCount", constant = "0")
