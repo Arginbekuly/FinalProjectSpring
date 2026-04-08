@@ -2,10 +2,12 @@ package finalProject.auth.service;
 
 import finalProject.user.entity.User;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -24,7 +26,7 @@ public class JwtService {
     public String generateToken(User user) {
         return Jwts.builder()
                 .subject(user.getEmail())
-                .claim("username", user.getUsername())
+                .claim("username", user.getProfileUsername())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expirationMs))
                 .signWith(getSigningKey())
@@ -35,9 +37,10 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public boolean isTokenValid(String token) {
+    public boolean isTokenValid(String token, UserDetails userDetails) {
         try {
-            return !isTokenExpired(token);
+            String userEmail = extractUserEmail(token);
+            return userEmail.equals(userDetails.getUsername()) && !isTokenExpired(token);
         } catch (Exception e) {
             return false;
         }
@@ -57,6 +60,15 @@ public class JwtService {
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
+    }
+
+    public boolean canParseToken(String token) {
+        try {
+            extractAllClaims(token);
+            return true;
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;
+        }
     }
 
     private SecretKey getSigningKey() {

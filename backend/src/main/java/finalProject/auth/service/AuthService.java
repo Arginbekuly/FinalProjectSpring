@@ -6,9 +6,11 @@ import finalProject.auth.dto.request.RegisterRequestDto;
 import finalProject.auth.dto.response.AuthResponseDto;
 import finalProject.common.exception.EmailAlreadyExistsException;
 import finalProject.common.exception.NotFoundException;
+import finalProject.user.dto.response.UserResponseDto;
 import finalProject.user.entity.User;
 import finalProject.user.entity.UserRole;
 import finalProject.user.entity.UserStatus;
+import finalProject.user.mapper.UserMapper;
 import finalProject.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,6 +25,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
 
     public AuthResponseDto register(RegisterRequestDto dto) {
         if (userRepository.existsByEmail(dto.email())) {
@@ -49,5 +52,9 @@ public class AuthService {
         User user = userRepository.findByEmail(dto.email())
                 .orElseThrow(() -> new NotFoundException("User not found with email: " + dto.email()));
         return new AuthResponseDto(jwtService.generateToken(user), user.getRole());
+    }
+
+    public UserResponseDto getCurrentUser(User user) {
+        return userMapper.toDto(user);
     }
 }

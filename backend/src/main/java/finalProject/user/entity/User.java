@@ -78,6 +78,10 @@ public class User implements UserDetails {
         return email;
     }
 
+    public String getProfileUsername() {
+        return username;
+    }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -98,4 +102,3 @@ public class User implements UserDetails {
         return status == UserStatus.ACTIVE;
     }
 }
-

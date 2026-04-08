@@ -8,6 +8,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/theory
       SPRING_DATASOURCE_USERNAME: ${DB_USER:-theories}
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD:-secret}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-bXktZGV2ZWxvcG1lbnQtand0LXNlY3JldC1rZXktZm9yLWRvY2tlci0zMi1ieXRlcw==}
       SPRING_PROFILES_ACTIVE: docker
     depends_on:
       postgres:

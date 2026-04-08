@@ -5,9 +5,12 @@ import finalProject.auth.dto.request.LoginRequestDto;
 import finalProject.auth.dto.request.RegisterRequestDto;
 import finalProject.auth.dto.response.AuthResponseDto;
 import finalProject.auth.service.AuthService;
+import finalProject.user.dto.response.UserResponseDto;
+import finalProject.user.entity.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,6 +28,11 @@ public class AuthController {
     @PostMapping("/login")
     public AuthResponseDto login(@Valid @RequestBody LoginRequestDto dto) {
         return authService.login(dto);
+    }
+
+    @GetMapping("/me")
+    public UserResponseDto me(@AuthenticationPrincipal User user) {
+        return authService.getCurrentUser(user);
     }
 
 }

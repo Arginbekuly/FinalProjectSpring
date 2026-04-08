@@ -19,8 +19,8 @@ public interface TheoryMapper {
     @Mapping(target = "publishedAt", ignore = true)
     @Mapping(target = "evidence", ignore = true)
     @Mapping(target = "status", expression = "java(TheoryStatus.PENDING_REVIEW)")
-    @Mapping(target = "credibilityScore", constant = "0")
-    @Mapping(target = "popularityScore", constant = "0")
+    @Mapping(target = "credibilityScore", expression = "java(0f)")
+    @Mapping(target = "popularityScore", expression = "java(0f)")
     @Mapping(target = "contradictionCount", constant = "0")
     @Mapping(target = "viewCount", constant = "0")
     Theory toEntity(TheoryCreateRequestDto dto);
