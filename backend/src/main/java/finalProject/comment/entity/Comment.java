@@ -30,13 +30,11 @@ public class Comment {
     @Column(name = "updated_at",nullable = false)
     private LocalDateTime updatedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(name = "user_id", nullable = false)
+    private UUID userId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "theory_id", nullable = false)
-    private Theory theory;
+    @Column(name = "theory_id", nullable = false)
+    private UUID theoryId;
 
     @PrePersist
     public void prePersist() {

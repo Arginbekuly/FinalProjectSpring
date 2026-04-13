@@ -26,11 +26,15 @@ public class Tag {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
-    @ManyToMany
-    @JoinTable(
-            name = "theory_tags",
-            joinColumns = @JoinColumn(name = "tag_id"),
-            inverseJoinColumns = @JoinColumn(name = "theory_id")
-    )
+
+    @Column(name = "theory_id", nullable = false)
+    private UUID theoryId;
+
+//    @ManyToMany
+//    @JoinTable(
+//            name = "theory_tags",
+//            joinColumns = @JoinColumn(name = "tag_id"),
+//            inverseJoinColumns = @JoinColumn(name = "theory_id")
+//    )
     private List<Theory> theories = new ArrayList<>();
 }

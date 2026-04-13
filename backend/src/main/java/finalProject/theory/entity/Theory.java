@@ -21,9 +21,8 @@ public class Theory {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Column(name = "user_id", nullable = false)
+    private UUID userId;
 
     @OneToMany(mappedBy = "theory", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Evidence> evidence = new ArrayList<>();

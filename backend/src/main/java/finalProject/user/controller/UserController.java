@@ -30,7 +30,7 @@ public class UserController {
         return userService.getUserById(userId);
     }
 
-    @GetMapping("/by-email")
+    @GetMapping("/getByEmail")
     public UserResponseDto getUserByEmail(@RequestParam String email) {
         return userService.getUserByEmail(email);
     }

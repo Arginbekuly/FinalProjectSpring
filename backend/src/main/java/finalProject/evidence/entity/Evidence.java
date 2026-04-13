@@ -56,13 +56,11 @@ public class Evidence{
         this.updatedAt = LocalDateTime.now();
     }
 
-    @ManyToOne
-    @JoinColumn(name = "theory_id")
-    private Theory theory;
+    @Column(name = "theory_id", nullable = false)
+    private UUID theoryId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Column(name = "user_id", nullable = false)
+    private UUID userId;
 
 
 }

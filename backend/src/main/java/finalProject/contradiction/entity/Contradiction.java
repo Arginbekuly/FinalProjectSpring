@@ -35,17 +35,14 @@ public class Contradiction {
     @Enumerated(EnumType.STRING)
     private ContradictionStatus status;
 
-    @ManyToOne
-    @JoinColumn(name = "theory_a_id", nullable = false)
-    private Theory theoryA;
+    @Column(name = "theory_id_a", nullable = false)
+    private UUID theoryIdA;
 
-    @ManyToOne
-    @JoinColumn(name = "theory_b_id", nullable = false)
-    private Theory theoryB;
+    @Column(name = "theory_id_b", nullable = false)
+    private UUID theoryIdB;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Column(name = "user_id", nullable = false)
+    private UUID userId;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;

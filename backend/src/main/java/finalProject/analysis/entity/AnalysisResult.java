@@ -38,9 +38,8 @@ public class AnalysisResult {
     @Column(name = "analyzed_at", nullable = false)
     private LocalDateTime analyzedAt;
 
-    @ManyToOne
-    @JoinColumn(name = "theory_id")
-    private Theory theory;
+    @Column(name = "theory_id", nullable = false)
+    private UUID theoryId;
 
     @PrePersist
     public void prePersist() {
