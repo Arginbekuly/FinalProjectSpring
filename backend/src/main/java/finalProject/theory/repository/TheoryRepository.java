@@ -3,7 +3,9 @@ package finalProject.theory.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import finalProject.theory.entity.Theory;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface TheoryRepository extends JpaRepository<Theory, UUID> {
+    List<Theory> findByUserId(UUID userId);
 }

@@ -23,7 +23,7 @@ public interface TheoryMapper {
     @Mapping(target = "popularityScore", expression = "java(0f)")
     @Mapping(target = "contradictionCount", constant = "0")
     @Mapping(target = "viewCount", constant = "0")
-    Theory toEntity(TheoryCreateRequestDto dto);
+    Theory toTheory(TheoryCreateRequestDto theoryDto);
 
     @Mapping(target = "userId", source = "user.id")
     TheoryResponseDto toDto(Theory theory);

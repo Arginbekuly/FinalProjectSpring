@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -50,6 +51,13 @@ public class UserService {
                 .orElseThrow(() -> new NotFoundException("User not found with email: " + email));
 
         return userMapper.toDto(user);
+    }
+
+    public List<UserResponseDto> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(userMapper::toDto)
+                .toList();
+
     }
 
     public UserResponseDto softDeleteUser(UUID userId) {
@@ -88,7 +96,7 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User not found with id: " + userId));
 
-        if (user.getStatus() == UserStatus.ACTIVE) {
+        if (user.getStatus() == UserStatus.ACTIVE && user.getRole() == UserRole.ADMIN) {
             user.setStatus(UserStatus.BLOCKED);
         } else if (user.getStatus() == UserStatus.BLOCKED && user.getRole() == UserRole.ADMIN) {
             user.setStatus(UserStatus.ACTIVE);

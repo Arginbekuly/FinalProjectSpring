@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -18,7 +19,7 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping
+    @PostMapping("/regUser")
     @ResponseStatus(HttpStatus.CREATED)
     public UserResponseDto createUser(@Valid @RequestBody UserCreateRequestDto dto) {
         return userService.createUser(dto);
@@ -32,6 +33,11 @@ public class UserController {
     @GetMapping("/by-email")
     public UserResponseDto getUserByEmail(@RequestParam String email) {
         return userService.getUserByEmail(email);
+    }
+
+    @GetMapping("/getAllUsers")
+    public List<UserResponseDto> getAllUsers() {
+        return userService.getAllUsers();
     }
 
     @PutMapping("/{userId}")
