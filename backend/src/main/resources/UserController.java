@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
+@FeignClient(name = "user-service", url = "${http://localhost:8081}")
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
