@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import finalProject.theory.entity.Theory;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -30,11 +28,7 @@ public class Tag {
     @Column(name = "theory_id", nullable = false)
     private UUID theoryId;
 
-//    @ManyToMany
-//    @JoinTable(
-//            name = "theory_tags",
-//            joinColumns = @JoinColumn(name = "tag_id"),
-//            inverseJoinColumns = @JoinColumn(name = "theory_id")
-//    )
-    private List<Theory> theories = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "theory_id", nullable = false, insertable = false, updatable = false)
+    private Theory theory;
 }

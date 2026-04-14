@@ -18,7 +18,7 @@ import java.util.UUID;
 @Table(
         name = "contradictions",
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"theory_a_id", "theory_b_id"})
+                @UniqueConstraint(columnNames = {"theory_id_a", "theory_id_b"})
         }
 )
 public class Contradiction {

@@ -17,6 +17,7 @@ public interface TheoryMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "publishedAt", ignore = true)
+    @Mapping(target = "user", ignore = true)
     @Mapping(target = "evidence", ignore = true)
     @Mapping(target = "status", expression = "java(TheoryStatus.PENDING_REVIEW)")
     @Mapping(target = "credibilityScore", expression = "java(0f)")
@@ -40,6 +41,7 @@ public interface TheoryMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "publishedAt", ignore = true)
+    @Mapping(target = "user", ignore = true)
     @Mapping(target = "evidence", ignore = true)
     void updateTheoryFromDto(TheoryUpdateRequestDto dto, @MappingTarget Theory theory);
 }

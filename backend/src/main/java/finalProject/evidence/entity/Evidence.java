@@ -59,6 +59,10 @@ public class Evidence{
     @Column(name = "theory_id", nullable = false)
     private UUID theoryId;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "theory_id", nullable = false, insertable = false, updatable = false)
+    private Theory theory;
+
     @Column(name = "user_id", nullable = false)
     private UUID userId;
 

@@ -15,6 +15,7 @@ public interface EvidenceMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "userId", ignore = true)
+    @Mapping(target = "theory", ignore = true)
     Evidence toEntity(EvidenceCreateRequestDto dto);
 
     EvidenceResponseDto toDto(Evidence entity);

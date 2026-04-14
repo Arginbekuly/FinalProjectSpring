@@ -60,6 +60,7 @@ public class User implements UserDetails {
         this.updatedAt = LocalDateTime.now();
     }
 
+    @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Theory> theories = new ArrayList<>();
 

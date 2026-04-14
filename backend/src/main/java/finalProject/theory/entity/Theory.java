@@ -24,6 +24,11 @@ public class Theory {
     @Column(name = "user_id", nullable = false)
     private UUID userId;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false, insertable = false, updatable = false)
+    private User user;
+
+    @Builder.Default
     @OneToMany(mappedBy = "theory", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Evidence> evidence = new ArrayList<>();
 
@@ -76,4 +81,3 @@ public class Theory {
     }
 
 }
-
