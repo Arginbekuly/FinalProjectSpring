@@ -1,5 +1,6 @@
 package finalProject.theory.service;
 
+import feign.FeignException;
 import finalProject.common.exception.NotFoundException;
 import finalProject.theory.dto.request.TheoryCreateRequestDto;
 import finalProject.theory.dto.request.TheoryUpdateRequestDto;
@@ -8,8 +9,7 @@ import finalProject.theory.entity.Theory;
 import finalProject.theory.entity.TheoryStatus;
 import finalProject.theory.mapper.TheoryMapper;
 import finalProject.theory.repository.TheoryRepository;
-import finalProject.user.entity.User;
-import finalProject.user.repository.UserRepository;
+import finalProject.user.client.UserClient;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,14 +24,13 @@ public class TheoryService {
 
     private final TheoryRepository theoryRepository;
     private final TheoryMapper theoryMapper;
-    private final UserRepository userRepository;
+    private final UserClient userClient;
 
     public TheoryResponseDto createTheory(UUID userId, TheoryCreateRequestDto theoryDto) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("User not found with id: " + userId));
+        ensureUserExists(userId);
 
         Theory theory = theoryMapper.toTheory(theoryDto);
-        theory.setUser(user);
+        theory.setUserId(userId);
 
         Theory savedTheory = theoryRepository.save(theory);
         return theoryMapper.toDto(savedTheory);
@@ -50,9 +49,7 @@ public class TheoryService {
     }
 
     public List<TheoryResponseDto> getTheoriesByUserId(UUID userId) {
-        if (!userRepository.existsById(userId)) {
-            throw new NotFoundException("User not found with id: " + userId);
-        }
+        ensureUserExists(userId);
 
         return theoryRepository.findByUserId(userId).stream()
                 .map(theoryMapper::toDto)
@@ -97,5 +94,13 @@ public class TheoryService {
 
         Theory savedTheory = theoryRepository.save(theory);
         return theoryMapper.toDto(savedTheory);
+    }
+
+    private void ensureUserExists(UUID userId) {
+        try {
+            userClient.getUserById(userId);
+        } catch (FeignException.NotFound exception) {
+            throw new NotFoundException("User not found with id: " + userId);
+        }
     }
 }

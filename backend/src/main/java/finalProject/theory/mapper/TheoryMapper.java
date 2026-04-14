@@ -13,7 +13,7 @@ import java.util.List;
 public interface TheoryMapper {
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "userId", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "publishedAt", ignore = true)
@@ -25,14 +25,13 @@ public interface TheoryMapper {
     @Mapping(target = "viewCount", constant = "0")
     Theory toTheory(TheoryCreateRequestDto theoryDto);
 
-    @Mapping(target = "userId", source = "user.id")
     TheoryResponseDto toDto(Theory theory);
 
     List<TheoryResponseDto> toDto(List<Theory> theories);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "userId", ignore = true)
     @Mapping(target = "status", ignore = true)
     @Mapping(target = "credibilityScore", ignore = true)
     @Mapping(target = "popularityScore", ignore = true)
