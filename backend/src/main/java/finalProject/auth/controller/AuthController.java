@@ -7,10 +7,12 @@ import finalProject.auth.dto.response.AuthResponseDto;
 import finalProject.auth.service.AuthService;
 import finalProject.user.dto.response.UserResponseDto;
 import finalProject.user.entity.User;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -30,7 +32,9 @@ public class AuthController {
         return authService.login(dto);
     }
 
+    @SecurityRequirement(name = "bearerAuth")
     @GetMapping("/me")
+    @PreAuthorize("isAuthenticated()")
     public UserResponseDto me(@AuthenticationPrincipal User user) {
         return authService.getCurrentUser(user);
     }
