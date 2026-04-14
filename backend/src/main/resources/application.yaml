@@ -27,4 +27,4 @@ springdoc:
 
 services:
   user:
-    url: ${USER_SERVICE_URL:http://localhost:8080}
+    url: ${USER_SERVICE_URL:http://userClient:8080}

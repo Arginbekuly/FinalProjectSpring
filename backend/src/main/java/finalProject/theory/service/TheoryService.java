@@ -1,6 +1,7 @@
 package finalProject.theory.service;
 
 import feign.FeignException;
+import finalProject.common.exception.ForbiddenException;
 import finalProject.common.exception.NotFoundException;
 import finalProject.theory.dto.request.TheoryCreateRequestDto;
 import finalProject.theory.dto.request.TheoryUpdateRequestDto;
@@ -10,6 +11,9 @@ import finalProject.theory.entity.TheoryStatus;
 import finalProject.theory.mapper.TheoryMapper;
 import finalProject.theory.repository.TheoryRepository;
 import finalProject.user.client.UserClient;
+import finalProject.user.dto.response.UserResponseDto;
+import finalProject.user.entity.User;
+import finalProject.user.entity.UserRole;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,8 +30,9 @@ public class TheoryService {
     private final TheoryMapper theoryMapper;
     private final UserClient userClient;
 
-    public TheoryResponseDto createTheory(UUID userId, TheoryCreateRequestDto theoryDto) {
+    public TheoryResponseDto createTheory(User currentUser, UUID userId, TheoryCreateRequestDto theoryDto) {
         ensureUserExists(userId);
+        validateUserCanManageUserTheories(currentUser, userId);
 
         Theory theory = theoryMapper.toTheory(theoryDto);
         theory.setUserId(userId);
@@ -56,9 +61,10 @@ public class TheoryService {
                 .toList();
     }
 
-    public TheoryResponseDto updateTheory(UUID theoryId, TheoryUpdateRequestDto request) {
+    public TheoryResponseDto updateTheory(User currentUser, UUID theoryId, TheoryUpdateRequestDto request) {
         Theory theory = theoryRepository.findById(theoryId)
                 .orElseThrow(() -> new NotFoundException("Theory not found with id: " + theoryId));
+        validateUserCanManageTheory(currentUser, theory);
 
         theoryMapper.updateTheoryFromDto(request, theory);
 
@@ -66,9 +72,10 @@ public class TheoryService {
         return theoryMapper.toDto(savedTheory);
     }
 
-    public TheoryResponseDto changeStatus(UUID theoryId) {
+    public TheoryResponseDto changeStatus(User currentUser, UUID theoryId) {
         Theory theory = theoryRepository.findById(theoryId)
                 .orElseThrow(() -> new NotFoundException("Theory not found with id: " + theoryId));
+        validateUserCanManageTheory(currentUser, theory);
 
         if (theory.getStatus() == TheoryStatus.DRAFT) {
             theory.setStatus(TheoryStatus.PENDING_REVIEW);
@@ -86,9 +93,10 @@ public class TheoryService {
         return theoryMapper.toDto(savedTheory);
     }
 
-    public TheoryResponseDto softDeleteTheory(UUID theoryId) {
+    public TheoryResponseDto softDeleteTheory(User currentUser, UUID theoryId) {
         Theory theory = theoryRepository.findById(theoryId)
                 .orElseThrow(() -> new NotFoundException("Theory not found with id: " + theoryId));
+        validateUserCanManageTheory(currentUser, theory);
 
         theory.setStatus(TheoryStatus.ARCHIVE);
 
@@ -98,9 +106,33 @@ public class TheoryService {
 
     private void ensureUserExists(UUID userId) {
         try {
-            userClient.getUserById(userId);
-        } catch (FeignException.NotFound exception) {
-            throw new NotFoundException("User not found with id: " + userId);
+            UserResponseDto user = userClient.getUserById(userId);
+            if (user == null) {
+                throw new NotFoundException("User not found with id: " + userId);
+            }
+        } catch (FeignException exception) {
+            if (exception.status() == 404) {
+                throw new NotFoundException("User not found with id: " + userId);
+            }
+            throw exception;
         }
+    }
+
+    private void validateUserCanManageTheory(User currentUser, Theory theory) {
+        validateUserCanManageUserTheories(currentUser, theory.getUserId());
+    }
+
+    private void validateUserCanManageUserTheories(User currentUser, UUID userId) {
+        if (isAdmin(currentUser)) {
+            return;
+        }
+
+        if (currentUser == null || currentUser.getId() == null || !currentUser.getId().equals(userId)) {
+            throw new ForbiddenException("You can manage only your own theories");
+        }
+    }
+
+    private boolean isAdmin(User currentUser) {
+        return currentUser != null && currentUser.getRole() == UserRole.ADMIN;
     }
 }
