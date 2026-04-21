@@ -109,8 +109,8 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User not found with id: " + userId));
 
-        if (user.getRole() == UserRole.USER) {
-            user.setRole(UserRole.ADMIN);
+        if (user.getRole() == UserRole.ADMIN && user.getStatus() == UserStatus.ACTIVE) {
+            user.setRole(UserRole.MODERATOR);
         } else if (user.getRole() == UserRole.ADMIN) {
             user.setRole(UserRole.USER);
         }
