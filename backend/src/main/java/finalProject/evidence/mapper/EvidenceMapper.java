@@ -25,6 +25,7 @@ public interface EvidenceMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "userId", ignore = true)
+    @Mapping(target = "theoryId", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "theory", ignore = true)

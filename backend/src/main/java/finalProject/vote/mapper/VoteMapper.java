@@ -1,6 +1,6 @@
 package finalProject.vote.mapper;
 
-import finalProject.vote.dto.request.VoteCreateRequestDto;
+import finalProject.vote.dto.request.VoteCreateAndUpdateRequestDto;
 import finalProject.vote.dto.response.VoteResponseDto;
 import finalProject.vote.entity.Vote;
 import org.mapstruct.Mapper;
@@ -16,7 +16,7 @@ public interface VoteMapper {
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "theory", ignore = true)
-    Vote toEntity(VoteCreateRequestDto dto);
+    Vote toVote(VoteCreateAndUpdateRequestDto dto);
 
     @Mapping(target = "userId", source = "user.id")
     @Mapping(target = "theoryId",source = "theory.id")

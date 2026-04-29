@@ -44,7 +44,7 @@ public class SecurityConfig {
                                 "/v3/api-docs.yaml"
                         ).permitAll()
                         .requestMatchers("/api/v1/auth/me").authenticated()
-                        .requestMatchers("/api/v1/theories/**", "/api/v1/evidences/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/api/v1/theories/**", "/api/v1/evidences/**", "/api/v1/votes/**", "/api/v1/comments/**", "/api/v1/contradictions/**", "/api/v1/analysis/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/api/v1/users/**").authenticated()
                         .anyRequest().hasRole("ADMIN")
                 )

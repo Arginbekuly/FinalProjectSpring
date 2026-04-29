@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.UUID;
 
-public record VoteCreateRequestDto(
+public record VoteCreateAndUpdateRequestDto(
         @NotNull(message = "Theory ID is required")
         UUID theoryId,
 

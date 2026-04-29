@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import finalProject.theory.entity.Theory;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface TheoryRepository extends JpaRepository<Theory, UUID> {

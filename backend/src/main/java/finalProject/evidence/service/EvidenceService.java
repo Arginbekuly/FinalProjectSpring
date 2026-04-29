@@ -1,6 +1,6 @@
 package finalProject.evidence.service;
 
-
+import finalProject.common.exception.BadRequestException;
 import finalProject.common.exception.ForbiddenException;
 import finalProject.common.exception.NotFoundException;
 import finalProject.evidence.dto.request.EvidenceCreateRequestDto;
@@ -11,11 +11,8 @@ import finalProject.evidence.entity.EvidenceType;
 import finalProject.evidence.mapper.EvidenceMapper;
 import finalProject.evidence.repository.EvidenceRepository;
 import finalProject.theory.repository.TheoryRepository;
-import finalProject.user.client.UserClient;
 import finalProject.user.entity.User;
 import finalProject.user.entity.UserRole;
-import finalProject.user.repository.UserRepository;
-import finalProject.user.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,27 +20,28 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
 
-import static finalProject.evidence.entity.EvidenceType.*;
-
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class EvidenceService {
+
     private final EvidenceRepository evidenceRepository;
     private final EvidenceMapper evidenceMapper;
     private final TheoryRepository theoryRepository;
 
-    public EvidenceResponseDto createEvidence(User currentUser,EvidenceCreateRequestDto evidenceDto) {
+    public EvidenceResponseDto createEvidence(User currentUser, EvidenceCreateRequestDto evidenceDto) {
+        ensureTheoryExists(evidenceDto.theoryId());
+        validateEvidenceByType(evidenceDto.type(), evidenceDto.content(), evidenceDto.sourceUrl());
+
         Evidence evidence = evidenceMapper.toEvidence(evidenceDto);
-        evidence.setUserId(currentUser.getId());
+        evidence.setUserId(getCurrentUserId(currentUser));
 
         Evidence savedEvidence = evidenceRepository.save(evidence);
         return evidenceMapper.toDto(savedEvidence);
     }
 
     public EvidenceResponseDto getEvidenceById(UUID evidenceId) {
-        Evidence evidence = evidenceRepository.findById(evidenceId)
-                .orElseThrow(() -> new NotFoundException("Evidence with id: " + evidenceId + " not found"));
+        Evidence evidence = getEvidenceOrThrow(evidenceId);
         return evidenceMapper.toDto(evidence);
     }
 
@@ -62,34 +60,24 @@ public class EvidenceService {
         return evidenceMapper.toDto(savedEvidence);
     }
 
-
-    public List<EvidenceResponseDto> getAllEvidences(){
-        return evidenceRepository.findAll().stream()
-                .map(evidenceMapper::toDto)
-                .toList();
+    public List<EvidenceResponseDto> getAllEvidences() {
+        return evidenceMapper.toDtoList(evidenceRepository.findAll());
     }
 
     public List<EvidenceResponseDto> getEvidenceByUserId(UUID userId) {
-        return evidenceRepository.findByUserId(userId).stream()
-                .map(evidenceMapper::toDto)
-                .toList();
+        return evidenceMapper.toDtoList(evidenceRepository.findAllByUserId(userId));
     }
 
     public List<EvidenceResponseDto> getEvidenceByTheoryId(UUID theoryId) {
         ensureTheoryExists(theoryId);
-
-        return evidenceRepository.findByTheoryId(theoryId).stream()
-                .map(evidenceMapper::toDto)
-                .toList();
+        return evidenceMapper.toDtoList(evidenceRepository.findAllByTheoryId(theoryId));
     }
-
 
     public void deleteEvidence(User currentUser, UUID evidenceId) {
         Evidence evidence = getEvidenceOrThrow(evidenceId);
         validateUserCanManageEvidence(currentUser, evidence);
         evidenceRepository.delete(evidence);
     }
-
 
     private Evidence getEvidenceOrThrow(UUID evidenceId) {
         return evidenceRepository.findById(evidenceId)
@@ -116,14 +104,22 @@ public class EvidenceService {
         switch (type) {
             case TEXT -> {
                 if (content == null || content.isBlank()) {
-                    throw new IllegalArgumentException("TEXT evidence must contain content");
+                    throw new BadRequestException("TEXT evidence must contain content");
                 }
             }
             case LINK, IMAGE_REFERENCE, VIDEO_REFERENCE, DOCUMENT_REFERENCE -> {
                 if (sourceUrl == null || sourceUrl.isBlank()) {
-                    throw new IllegalArgumentException(type + " evidence must contain sourceUrl");
+                    throw new BadRequestException(type + " evidence must contain sourceUrl");
                 }
             }
         }
+    }
+
+    private UUID getCurrentUserId(User currentUser) {
+        if (currentUser == null || currentUser.getId() == null) {
+            throw new ForbiddenException("Authentication is required to manage evidence");
+        }
+
+        return currentUser.getId();
     }
 }
