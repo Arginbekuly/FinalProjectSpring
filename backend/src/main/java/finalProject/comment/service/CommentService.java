@@ -36,22 +36,26 @@ public class CommentService {
         comment.setUserId(getCurrentUserId(currentUser));
 
         Comment createdComment = commentRepository.save(comment);
-        return commentMapper.toDto(createdComment);
+        return toDtoWithUsername(createdComment);
     }
 
     public CommentResponseDto getCommentById(UUID commentId) {
         Comment comment = getCommentOrThrow(commentId);
-        return commentMapper.toDto(comment);
+        return toDtoWithUsername(comment);
     }
 
     public List<CommentResponseDto> getCommentsByTheoryId(UUID theoryId) {
         ensureTheoryExists(theoryId);
-        return commentMapper.toDtoList(commentRepository.findAllByTheoryId(theoryId));
+        return commentRepository.findAllByTheoryId(theoryId).stream()
+                .map(this::toDtoWithUsername)
+                .toList();
     }
 
     public List<CommentResponseDto> getCommentsByUserId(UUID userId) {
         ensureUserExists(userId);
-        return commentMapper.toDtoList(commentRepository.findAllByUserId(userId));
+        return commentRepository.findAllByUserId(userId).stream()
+                .map(this::toDtoWithUsername)
+                .toList();
     }
 
     public CommentResponseDto updateComment(User currentUser, UUID commentId, CommentUpdateRequestDto dto) {
@@ -61,7 +65,7 @@ public class CommentService {
         commentMapper.updateCommentFromDto(dto, comment);
 
         Comment updatedComment = commentRepository.save(comment);
-        return commentMapper.toDto(updatedComment);
+        return toDtoWithUsername(updatedComment);
     }
 
     public void deleteComment(User currentUser, UUID commentId) {
@@ -103,5 +107,13 @@ public class CommentService {
         }
 
         return currentUser.getId();
+    }
+
+    private CommentResponseDto toDtoWithUsername(Comment comment) {
+        String username = userRepository.findById(comment.getUserId())
+                .map(User::getProfileUsername)
+                .orElse(null);
+
+        return commentMapper.toDto(comment, username);
     }
 }

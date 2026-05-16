@@ -1,5 +1,6 @@
 package finalProject.evidence.dto.request;
 
+import finalProject.evidence.entity.EvidencePosition;
 import finalProject.evidence.entity.EvidenceType;
 import jakarta.validation.constraints.*;
 
@@ -22,13 +23,12 @@ public record EvidenceCreateRequestDto(
         @NotBlank(message = "Source URL cannot be empty")
         String sourceUrl,
 
-        @NotNull(message = "Reliability score is required")
-        @Min(value = 0, message = "Reliability score must be at least 0")
-        @Max(value = 100, message = "Reliability score must be at most 100")
-        Integer reliabilityScore,
 
         @NotNull(message = "Evidence type is required")
         EvidenceType type,
+
+        @NotNull(message = "Evidence position is required")
+        EvidencePosition position,
 
         @NotNull(message = "Theory ID is required")
         UUID theoryId

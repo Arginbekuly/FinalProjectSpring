@@ -23,8 +23,11 @@ public interface CommentMapper {
 
     Comment toComment(CommentCreateRequestDto dto);
 
-    @Mapping(target = "username", expression = "java(null)")
+    @Mapping(target = "username", ignore = true)
     CommentResponseDto toDto(Comment comments);
+
+    @Mapping(target = "username", source = "username")
+    CommentResponseDto toDto(Comment comments, String username);
 
     List<CommentResponseDto> toDtoList(List<Comment> comments);
 

@@ -28,6 +28,7 @@ public class ContradictionService {
     private final ContradictionRepository contradictionRepository;
     private final ContradictionMapper contradictionMapper;
     private final TheoryRepository theoryRepository;
+    private final ContradictionCalculateService contradictionCalculateService;
 
     public ContradictionResponseDto createContradiction(User currentUser, ContradictionCreateRequestDto dto) {
         UUID userId = getCurrentUserId(currentUser);
@@ -40,6 +41,7 @@ public class ContradictionService {
         Contradiction contradiction = contradictionMapper.toEntity(dto);
         contradiction.setUserId(userId);
         contradiction.setStatus(ContradictionStatus.DETECTED);
+        contradiction.setSeverity(contradictionCalculateService.calculateSeverity(theoryA, theoryB, dto.reason()));
 
         Contradiction savedContradiction = contradictionRepository.save(contradiction);
         refreshContradictionCounts(theoryA.getId(), theoryB.getId());
@@ -158,6 +160,7 @@ public class ContradictionService {
                 baseDto.contradictingTheoryId(),
                 contradictingTheoryTitle,
                 baseDto.reason(),
+                baseDto.status(),
                 baseDto.createdAt()
         );
     }

@@ -25,6 +25,10 @@ public class Evidence{
     @Enumerated(EnumType.STRING)
     private EvidenceType type;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "position", nullable = false)
+    private EvidencePosition position;
+
     @Column(name = "title", nullable = false)
     private String title;
 

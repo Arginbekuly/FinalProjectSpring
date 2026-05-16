@@ -17,11 +17,8 @@ public record ContradictionCreateRequestDto(
 
         @NotBlank(message = "Reason cannot be empty")
         @Size(max = 2000, message = "Reason must not exceed 2000 characters")
-        String reason,
+        String reason
 
-        @NotNull(message = "Severity is required")
-        @Min(value = 1, message = "Severity must be at least 1")
-        Integer severity
 
 ) {
 }

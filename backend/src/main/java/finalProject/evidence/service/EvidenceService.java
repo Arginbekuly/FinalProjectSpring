@@ -11,6 +11,7 @@ import finalProject.evidence.entity.EvidenceType;
 import finalProject.evidence.mapper.EvidenceMapper;
 import finalProject.evidence.repository.EvidenceRepository;
 import finalProject.theory.repository.TheoryRepository;
+import finalProject.theory.service.TheoryInvestigationService;
 import finalProject.user.entity.User;
 import finalProject.user.entity.UserRole;
 import jakarta.transaction.Transactional;
@@ -28,6 +29,8 @@ public class EvidenceService {
     private final EvidenceRepository evidenceRepository;
     private final EvidenceMapper evidenceMapper;
     private final TheoryRepository theoryRepository;
+    private final TheoryInvestigationService theoryInvestigationService;
+    private final EvidenceCalculateService evidenceCalculateService;
 
     public EvidenceResponseDto createEvidence(User currentUser, EvidenceCreateRequestDto evidenceDto) {
         ensureTheoryExists(evidenceDto.theoryId());
@@ -35,8 +38,10 @@ public class EvidenceService {
 
         Evidence evidence = evidenceMapper.toEvidence(evidenceDto);
         evidence.setUserId(getCurrentUserId(currentUser));
+        evidence.setReliabilityScore(evidenceCalculateService.calculateReliability(evidenceDto));
 
         Evidence savedEvidence = evidenceRepository.save(evidence);
+        theoryInvestigationService.recalculate(savedEvidence.getTheoryId());
         return evidenceMapper.toDto(savedEvidence);
     }
 
@@ -57,6 +62,7 @@ public class EvidenceService {
         evidenceMapper.updateEvidenceFromDto(request, evidence);
 
         Evidence savedEvidence = evidenceRepository.save(evidence);
+        theoryInvestigationService.recalculate(savedEvidence.getTheoryId());
         return evidenceMapper.toDto(savedEvidence);
     }
 
@@ -76,7 +82,9 @@ public class EvidenceService {
     public void deleteEvidence(User currentUser, UUID evidenceId) {
         Evidence evidence = getEvidenceOrThrow(evidenceId);
         validateUserCanManageEvidence(currentUser, evidence);
+        UUID theoryId = evidence.getTheoryId();
         evidenceRepository.delete(evidence);
+        theoryInvestigationService.recalculate(theoryId);
     }
 
     private Evidence getEvidenceOrThrow(UUID evidenceId) {

@@ -51,6 +51,23 @@ public class Theory {
     @Column(name = "popularity_score", nullable = false)
     private Float popularityScore;
 
+    @Column(name = "support_score", nullable = false)
+    private Float supportScore;
+
+    @Column(name = "opposition_score", nullable = false)
+    private Float oppositionScore;
+
+    @Column(name = "controversy_score", nullable = false)
+    private Float controversyScore;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "investigation_status", nullable = false)
+    private InvestigationStatus investigationStatus;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "debate_verdict", nullable = false)
+    private DebateVerdict debateVerdict;
+
     @Column(name = "contradiction_count", nullable = false)
     private Integer contradictionCount;
 
