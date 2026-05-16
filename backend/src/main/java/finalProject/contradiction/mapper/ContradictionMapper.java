@@ -12,7 +12,7 @@ import java.util.List;
 public interface ContradictionMapper {
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "severity", source = "severity")
+    @Mapping(target = "severity", ignore = true)
     @Mapping(target = "status", ignore = true)
     @Mapping(target = "theoryIdA", source = "theoryId")
     @Mapping(target = "theoryIdB", source = "contradictingTheoryId")
