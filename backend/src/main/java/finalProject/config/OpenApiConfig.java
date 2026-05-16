@@ -36,20 +36,33 @@ public class OpenApiConfig {
     }
 
     @Bean
-    public GroupedOpenApi userApi() {
+    public GroupedOpenApi authenticationApi() {
         return GroupedOpenApi.builder()
-                .group("user")
+                .group("authentication")
+                .pathsToMatch("/api/v1/auth/**")
+                .build();
+    }
+
+    @Bean
+    public GroupedOpenApi theoryApi() {
+        return GroupedOpenApi.builder()
+                .group("theories")
                 .pathsToMatch(
-                        "/api/v1/auth/login",
-                        "/api/v1/auth/register",
                         "/api/v1/auth/me",
                         "/api/v1/theories/**",
                         "/api/v1/evidences/**",
                         "/api/v1/votes/**",
                         "/api/v1/comments/**",
-                        "/api/v1/contradictions/**",
-                        "/api/v1/analysis/**"
+                        "/api/v1/contradictions/**"
                 )
+                .build();
+    }
+
+    @Bean
+    public GroupedOpenApi resultApi() {
+        return GroupedOpenApi.builder()
+                .group("results")
+                .pathsToMatch("/api/v1/analysis/**")
                 .build();
     }
 }
