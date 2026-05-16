@@ -39,10 +39,17 @@ public class OpenApiConfig {
     public GroupedOpenApi userApi() {
         return GroupedOpenApi.builder()
                 .group("user")
-                .pathsToMatch("/api/v1/auth/login",
+                .pathsToMatch(
+                        "/api/v1/auth/login",
                         "/api/v1/auth/register",
                         "/api/v1/auth/me",
-                        "/api/v1/theories/**")
+                        "/api/v1/theories/**",
+                        "/api/v1/evidences/**",
+                        "/api/v1/votes/**",
+                        "/api/v1/comments/**",
+                        "/api/v1/contradictions/**",
+                        "/api/v1/analysis/**"
+                )
                 .build();
     }
 }
