@@ -1,0 +1,30 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: Theory-Conspiracy-Validator
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/theory
+    username: theories
+    password: secret
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+  flyway:
+    enabled: true
+
+  jwt:
+    secret: ${JWT_SECRET_KEY}
+    expiration-ms: 86400000
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+services:
+  user:
+    url: ${USER_SERVICE_URL:http://localhost:8080}
